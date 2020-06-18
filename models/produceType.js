@@ -2,12 +2,18 @@ let mongoose = require('mongoose');
 
 let Schema = mongoose.Schema;
 
-// define produce type
-let ProduceType = new Schema ({
-    name: String,
-    description: String,
-    url: String
+// define item schema
+let ItemSchema = new Schema ({
+    name: {type: String, required: true},
+    description: {type: String, required: true},
 })
 
-// export produce type
-module.exports = mongoose.model('ProduceType', ProduceType);
+// virtual for url
+ItemSchema
+.virtual('url')
+.get(function () {
+  return '/store/item/' + this._id;
+});
+
+// export item schema
+module.exports = mongoose.model('Item', ItemSchema);
