@@ -3,7 +3,7 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 // define produce type
-let ProduceTypeSchema = new Schema ({
+let ItemSchema = new Schema ({
     name: {type: String, required: true},
     description: {type: String, required: true},
     price: {type: Number, required: true},
@@ -13,11 +13,11 @@ let ProduceTypeSchema = new Schema ({
 })
 
 // virtual for url
-ProduceTypeSchema
+ItemSchema
 .virtual('url')
 .get(function () {
-  return '/store/producetype/' + this._id;
+  return '/store/item/' + this._id;
 });
 
 // export produce type
-module.exports = mongoose.model('ProduceType', ProduceTypeSchema);
+module.exports = mongoose.model('Item', ItemSchema);

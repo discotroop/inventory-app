@@ -3,17 +3,17 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 // define item schema
-let ItemSchema = new Schema ({
+let ProduceTypeSchema = new Schema ({
     name: {type: String, required: true},
     description: {type: String, required: true},
 })
 
 // virtual for url
-ItemSchema
+ProduceTypeSchema
 .virtual('url')
 .get(function () {
-  return '/store/item/' + this._id;
+  return '/store/producetype/' + this._id;
 });
 
 // export item schema
-module.exports = mongoose.model('Item', ItemSchema);
+module.exports = mongoose.model('ProduceType', ProduceTypeSchema);
