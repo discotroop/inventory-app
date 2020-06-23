@@ -1,6 +1,9 @@
 #! /usr/bin/env node
 
 // https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose
+// to run:
+// node populatedb "mongodb+srv://Admin:Admin@cluster0-bkvrt.mongodb.net/produce_stand?retryWrites=true&w=majority"
+
 
 console.log('This script populates some test produce types and produce items to the server');
 
