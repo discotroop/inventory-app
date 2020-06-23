@@ -1,6 +1,8 @@
 #! /usr/bin/env node
 
-console.log('This script populates some test books, authors, genres and bookinstances to your database. Specified database as argument - e.g.: populatedb mongodb+srv://cooluser:coolpassword@cluster0-mbdj7.mongodb.net/local_library?retryWrites=true');
+// https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose
+
+console.log('This script populates some test produce types and produce items to the server');
 
 // Get arguments passed on command line
 var userArgs = process.argv.slice(2);
@@ -47,8 +49,9 @@ function produceTypeCreate(name, description, cb) {
       }
       // console to show and push to producetypes array
       console.log('New Produce Type: ' + produceType)
-      producetypes.push(produceType);
-  });
+      producetypes.push(produceType)
+      cb(null, produceType);
+  }   );
 }
 
 // Create Vegetable item
@@ -77,19 +80,19 @@ function itemCreate(name, description, price, quantity, portion, type, cb) {
 function createProduceTypes(cb) {
     async.series([
         function(callback) {
-          produceTypeCreate('Greens', 'Leafy Greens', callback);
+          produceTypeCreate('Greens', 'Leafy Greens', callback)
         },
         function(callback) {
-          produceTypeCreate('Lettuces', 'Lettuces', callback);
+          produceTypeCreate('Lettuces', 'Lettuces', callback)
         },
         function(callback) {
-          produceTypeCreate('Root Vegetables', 'Root Vegetables', callback);
+          produceTypeCreate('Root Vegetables', 'Root Vegetables', callback)
         },
         function(callback) {
-          produceTypeCreate('Tomatoes', 'Tomatoes', callback);
+          produceTypeCreate('Tomatoes', 'Tomatoes', callback)
         },
         function(callback) {
-          produceTypeCreate('Herbs', 'Fresh Herbs From the Garden', callback);
+          produceTypeCreate('Herbs', 'Fresh Herbs From the Garden', callback)
         },
         ],
         // optional callback
@@ -121,15 +124,6 @@ function createItems(cb) {
                 [producetypes[3], ],
                 callback
                 );
-        },
-        function(callback) {
-            itemCreate();
-        },
-        function(callback) {
-            itemCreate();
-        },
-        function(callback) {
-            itemCreate();
         },
     ],
     cb);
