@@ -35,7 +35,23 @@ exports.item_list = function (req, res, next) {
 };
 // Display item by id on GET 
 exports.item_detail = function (req, res, next) {
-    res.render("index", {title: "tbd"});
+    
+    async.parallel({
+        item: function(callback) {
+            Item.findById(req.params.id)
+            .populate('type')
+            .exec(callback);
+        },
+    }, function(err, results) {
+        if(err) {return next(err);}
+        if(results.item = null) {
+            let err = new Error('Item not found');
+            err.status = 404;
+            return next(err);
+        }
+        console.log(results.item)
+        res.render('item_detail', {title: results.item.name, item: results.item} );
+    });
 };
 
 // Display item create form on GET
