@@ -24,12 +24,13 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+
+// items and types arrays
 var items = []
 var producetypes = []
 
-// pass in model args
 
-
+// Create Produce Types
 function produceTypeCreate(name, description, cb) {
   // define object
   let produceType = new ProduceType({
@@ -44,12 +45,13 @@ function produceTypeCreate(name, description, cb) {
           cb(err, null);
           return;
       }
-      // console to show and push to producetypes
+      // console to show and push to producetypes array
       console.log('New Produce Type: ' + produceType)
       producetypes.push(produceType);
   });
 }
 
+// Create Vegetable item
 function itemCreate(name, description, price, quantity, portion, type, cb) {
     itemdetail = {
         name: name,
@@ -71,6 +73,7 @@ function itemCreate(name, description, price, quantity, portion, type, cb) {
     });
 }
 
+// Create multiple produce types
 function createProduceTypes(cb) {
     async.series([
         function(callback) {
@@ -93,8 +96,8 @@ function createProduceTypes(cb) {
         cb);
 }
 
-// name, description, price, quantity, portion, type, cb
 
+// create multiple store items
 function createItems(cb) {
     async.series([
         function(callback) {
@@ -109,7 +112,15 @@ function createItems(cb) {
                 );
         },
         function(callback) {
-            itemCreate();
+            itemCreate(
+                'Roma Tomatoes', 
+                'Fresh Roma Tomatoes. Great for salads or pizza topping',
+                3.00,
+                3,
+                '3 Tomatoes to a pack',
+                [producetypes[3], ],
+                callback
+                );
         },
         function(callback) {
             itemCreate();
@@ -120,17 +131,14 @@ function createItems(cb) {
         function(callback) {
             itemCreate();
         },
-    ])
+    ],
+    cb);
 }
 
 
-
-
-
 async.series([
-    createGenreAuthors,
-    createBooks,
-    createBookInstances
+    createProduceTypes,
+    createItems,
 ],
 // Optional callback
 function(err, results) {
@@ -138,7 +146,7 @@ function(err, results) {
         console.log('FINAL ERR: '+err);
     }
     else {
-        console.log('BOOKInstances: '+bookinstances);
+        console.log('Items: '+items);
         
     }
     // All done, disconnect from database
