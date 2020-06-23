@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1= title
+  
+  ul
+    each item in item_list
+      li 
+        a(href=item.url) #{item.name} 
+         |  (#{item.name})
+
+    else
+      li There are no items.
+
+        //- - item_list.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
