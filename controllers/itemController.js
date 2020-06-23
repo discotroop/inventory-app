@@ -21,6 +21,23 @@ exports.index = function(req, res) {
     });
 };
 
+// Display all items on GET
+exports.item_list = function (req, res, next) {
+
+    Item.find({}, 'name type')
+    .populate('type')
+    .exec(function(err, list_items) {
+        console.log(list_items)
+        if(err) {return next(err);}
+        // on success render
+        res.render("item_list", {title: "All Items", item_list: list_items});
+    });
+};
+// Display item by id on GET 
+exports.item_detail = function (req, res, next) {
+    res.render("index", {title: "tbd"});
+};
+
 // Display item create form on GET
 exports.item_create_get = function (req, res, next) {
     res.render("index", {title: "tbd"});
@@ -45,14 +62,5 @@ exports.item_update_get = function (req, res, next) {
 };
 // Handle item update on POST 
 exports.item_update_post = function (req, res, next) {
-    res.render("index", {title: "tbd"});
-};
-
-// Display item by id on GET 
-exports.item_detail = function (req, res, next) {
-    res.render("index", {title: "tbd"});
-};
-// Display all items on GET
-exports.item_list = function (req, res, next) {
     res.render("index", {title: "tbd"});
 };
