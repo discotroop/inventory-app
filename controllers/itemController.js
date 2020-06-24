@@ -35,54 +35,49 @@ exports.item_list = function (req, res, next) {
 };
 // Display item by id on GET 
 exports.item_detail = function (req, res, next) {
-    console.log("params in item_detail: ", req.params)
     
     async.parallel({
         item: function(callback) {
-            console.log("params in async: ", req.params.id)
             Item.findById(req.params.id)
             .populate('type')
             .exec(callback);
         },
     }, function(err, results) {
-        console.log("results in callback: ", results)
         if(err) {
             return next(err);
         }
-        console.log("results after first if: ", results)
         if(results.item == null) {
             let err = new Error('Item not found');
             err.status = 404;
             return next(err);
         }
-        console.log("results in callback after ifs: ", results)
         res.render('item_detail', {title: results.item.name, item: results.item} );
     });
 };
 
 // Display item create form on GET
 exports.item_create_get = function (req, res, next) {
-    res.render("index", {title: "tbd"});
+    res.render("item_create", {title: "tbd"});
 };
 // Handle item create on POST
 exports.item_create_post = function (req, res, next) {
-    res.render("index", {title: "tbd"});
+    res.render("item_detail", {title: "tbd"});
 };
 
 // Display item delete on GET
 exports.item_delete_get = function (req, res, next) {
-    res.render("index", {title: "tbd"});
+    res.render("item_delete", {title: "tbd"});
 };
 // Handle item delete on POST 
 exports.item_delete_post = function (req, res, next) {
-    res.render("index", {title: "tbd"});
+    res.render("item_delete", {title: "tbd"});
 };
 
 // Display item update on GET 
 exports.item_update_get = function (req, res, next) {
-    res.render("index", {title: "tbd"});
+    res.render("item_create", {title: "tbd"});
 };
 // Handle item update on POST 
 exports.item_update_post = function (req, res, next) {
-    res.render("index", {title: "tbd"});
+    res.render("item_detail", {title: "tbd"});
 };

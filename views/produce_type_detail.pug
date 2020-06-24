@@ -1,0 +1,17 @@
+extends layout
+
+
+
+block content 
+    h1 Produce Type: #{title}
+
+    h3 Description:
+    p #{produceType.description}
+
+    p id #{produceType._id}
+    
+    hr
+    p
+      a(href=produceType.url+'/delete') Delete Produce Type
+    p
+      a(href=produceType.url+'/update') Update Produce Type

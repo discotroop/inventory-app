@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title
+  p hello
+  
+  ul
+    each produce_type in produce_type_list
+      li 
+        a(href=produce_type.url) #{produce_type.name} 
+        //-  |  (#{item.name})
+        //-  | #{item}
+
+    else
+      li There are no items.
+
+        //- - item_list.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
