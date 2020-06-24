@@ -62,7 +62,11 @@ exports.item_detail = function (req, res, next) {
 
 // Display item create form on GET
 exports.item_create_get = function (req, res, next) {
-    res.render("item_create", {title: "Create New Item:"});
+    ProduceType.find({}, 'name')
+    .exec(function (err, produce_types) {
+        if (err) { return next(err); }
+        res.render("item_create", {title: "Create New Item:", types: produce_types})
+    });
 };
 
 // what
