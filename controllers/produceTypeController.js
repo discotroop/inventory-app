@@ -124,12 +124,16 @@ exports.producetype_delete_post = function (req, res, next) {
       }, function(err, results) {
         // if error than return err
           if (err) { return next(err); }
-          if (results.producetype==null) { 
-              res.redirect('/store/producetypes');
+          if (results.producetype_items.length > 0) { 
+              res.render('produce_type_delete', { produce_type: producetype, items: producetype_items} )
+          } else {
+              console.log(req.body.producetypeid)
+            ProduceType.findByIdAndDelete(req.body.producetypeid, function deleteProduceType(err) {
+                if (err) { return next(err); }
+                res.redirect('store/producetypes')
+            })
           }
-          // Successful, so render.
-          res.render('genre_delete', { title: 'Delete Genre', genre: results.genre,
-          genre_books: results.genres_books } );
+
       });
     
     };
