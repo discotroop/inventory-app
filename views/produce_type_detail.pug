@@ -9,6 +9,13 @@ block content
     p #{produceType.description}
 
     p id #{produceType._id}
+
+    ul
+    each item in type_items
+      li 
+        a(href=item.url) #{item.name} 
+        //-  |  (#{item.name})
+        //-  | #{item}
     
     hr
     p

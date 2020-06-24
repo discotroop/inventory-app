@@ -20,6 +20,10 @@ exports.producetype_detail = function (req, res, next) {
             ProduceType.findById(req.params.id)
             .exec(callback);
         },
+        items_type: function (callback) {
+            Item.find({ 'type': req.params.id })
+            .exec(callback);
+        },
     }, function(err, results) {
         if(err) {return next(err)};
         if(results.produceType == null) {
@@ -27,7 +31,8 @@ exports.producetype_detail = function (req, res, next) {
             err.status = 404;
             return next(err);
         }
-        res.render('produce_type_detail', { title: results.produceType.name, produceType: results.produceType } );
+        console.log(results.items_type)
+        res.render('produce_type_detail', { title: results.produceType.name, produceType: results.produceType, type_items: results.items_type } );
     });
 };
 
