@@ -2,6 +2,11 @@ let ProduceType = require('../models/produceType');
 let async = require('async');
 let Item = require('../models/item');
 
+// Validator for create and update.
+const validator = require('express-validator')
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
+
 exports.index = function(req, res) {
     async.parallel({
         // count items in store
@@ -57,12 +62,76 @@ exports.item_detail = function (req, res, next) {
 
 // Display item create form on GET
 exports.item_create_get = function (req, res, next) {
-    res.render("item_create", {title: "tbd"});
+    res.render("item_create", {title: "Create New Item:"});
 };
+
+// what
 // Handle item create on POST
-exports.item_create_post = function (req, res, next) {
-    res.render("item_detail", {title: "tbd"});
-};
+exports.item_create_post = [
+    // convert produce type to an array.
+    
+    (req, res, next) => {
+        console.log(req.body.producetype)
+        if(!(req.body.producetype instanceof Array)){
+            if(typeof req.body.producetype==='undefined')
+            req.body.producetype=[];
+        } else {
+            req.body.genre=new Array(req.body.producetype);
+        }
+        next();
+    },
+    
+    // validate fields
+    body('name', 'Name must not be empty').trim().isLength({ min: 1}),
+    body('price', 'Price must be included').trim().isLength({ min: 1}),
+    body('quantity', 'Quanity must be included').trim().isLength({ min: 1}),
+
+    // sanitize all fields
+    sanitizeBody('*').escape(),
+
+    // process validated + sanitized request
+    (req, res, next) => {
+        // catch errors
+        const errors = validationResult(req);
+        // create new item object
+        let item = new Item({
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            quantity: req.body.quantity,
+            portion: req.body.portion,
+            type: req.body.producetype
+        });
+        console.log(item)
+
+        // check for errors
+        if (!errors.isEmpty()) {
+            async.parallel({
+                producetypes: function(callback) {
+                    ProduceType.find(callback);
+                },
+            }, function(err, results) {
+                if (err) { return next(err); }
+                // mark selected produce types
+                for(let i = 0; i < results.producetypes.length; i++) {
+                    if (item.type.indexOf(results.producetypes[i]._id) > -1) {
+                        results.producetypes[i].checked='true';
+                    }
+                }
+                res.render('item_create', { title: 'Create New Item', item: item,
+                types: results.producetypes, erros: errors.array() });
+            });
+            return;
+        }
+        else {
+            // It's valid, save it!
+            item.save(function (err) {
+                if(err) { return next(err); }
+                res.redirect(item.url);
+            });
+        }
+    }
+];
 
 // Display item delete on GET
 exports.item_delete_get = function (req, res, next) {
