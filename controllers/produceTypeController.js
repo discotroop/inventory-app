@@ -158,7 +158,36 @@ exports.producetype_update_get = function (req, res, next) {
     });
 };
 // Handle update request on POST 
-exports.producetype_update_post = function (req, res, next) {
-    res.render("index", {title: results.produceType.name, produce_type: results.produceType});
-};
+exports.producetype_update_post = [
+    // validate and require name
+    validator.body('name', 'Produce Type name required').trim().isLength({ min: 1}),
+    // sanitize name
+    validator.sanitizeBody('name').escape(),
 
+    // Process validated + sanitized request
+    (req, res, next) => {
+        // pull out errors
+        const errors = validationResult(req);
+        // create new Produce Type Object
+        let producetype = new ProduceType({
+            name: req.body.name,
+            description: req.body.description,
+            _id: req.params.id
+        }
+    );
+    // check for errors
+    if (!errors.isEmpty()) {
+        // if errors render form with errors
+        res.render('produce_type_create', { title: 'Create New Produce Type', produce_type: producetype,
+        errors: errors.array() });
+        return;
+    }
+    else {
+        // Data is valid => update produce type
+        ProduceType.findByIdAndUpdate(req.params.id, producetype, {}, function (err, theproducetype) {
+            if (err) { return next(err); }
+            res.redirect(theproducetype.url);
+        });
+      }
+    }
+];
