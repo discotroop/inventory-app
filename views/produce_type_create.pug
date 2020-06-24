@@ -6,7 +6,7 @@ block content
   form(method='POST' action='')
     div.form-group
       label(for='name') Produce Type Name:
-      input#name.form-control(type='text' placeholder='Name of Produce Type' name='name' required='true' value=(undefined===produce_type ? '' : produce_type.first_name) )
+      input#name.form-control(type='text' placeholder=(produce_type===undefined ? 'Name of Produce Type' : produce_type.name) name='name' required='true' value=(undefined===produce_type ? '' : produce_type.name) )
     div.form-group
       label(for='description') Description:
       input#description.form-control(type='text' name='description' value=(undefined===produce_type ? '' : produce_type.description) )
