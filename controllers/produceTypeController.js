@@ -91,12 +91,49 @@ exports.producetype_create_post = [
 ]
 // Display delete on GET
 exports.producetype_delete_get = function (req, res, next) {
-    res.render("index", {title: "tbd"});
+    async.parallel({
+        // find produce type by id
+        producetype: function(callback) {
+            ProduceType.findById(req.params.id).exec(callback);
+        },
+        producetype_items: function(callback) {
+            Item.find({ 'type': req.params.id}).exec(callback);
+        },
+    }, function(err, results) {
+        if(err) {return next(err); }
+        if(results.producetype == null) {
+            res.redirect('store/producetypes');
+        }
+        res.render('produce_type_delete', { title: "Delete Produce Type",
+        produce_type: results.producetype, items: results.producetype_items
+        });
+    });
 };
 // Handle delete on POST
 exports.producetype_delete_post = function (req, res, next) {
-    res.render("index", {title: "tbd"});
-};
+
+    async.parallel({
+        // find produce type
+        producetype: function(callback) {
+              ProduceType.findById(req.params.id).exec(callback)
+          },
+        // find items of produce type
+          producetype_items: function(callback) {
+            Item.find({ 'type': req.params.id }).exec(callback)
+          },
+      }, function(err, results) {
+        // if error than return err
+          if (err) { return next(err); }
+          if (results.producetype==null) { 
+              res.redirect('/store/producetypes');
+          }
+          // Successful, so render.
+          res.render('genre_delete', { title: 'Delete Genre', genre: results.genre,
+          genre_books: results.genres_books } );
+      });
+    
+    };
+    
 
 // Display update screen on GET
 exports.producetype_update_get = function (req, res, next) {
