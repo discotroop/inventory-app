@@ -1,4 +1,15 @@
 extends layout
 
+
+
 block content 
-h1 Title: #{item.title}
+    h1 Item: #{title}
+
+    h3 Description:
+    p #{item.description}
+
+    p price: $#{item.price} 
+    p portion: #{item.portion}
+    p Quantity in stock: #{item.quantity}
+    p id #{item._id}
+    
