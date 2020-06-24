@@ -31,15 +31,17 @@ exports.producetype_detail = function (req, res, next) {
             err.status = 404;
             return next(err);
         }
-        console.log(results.items_type)
         res.render('produce_type_detail', { title: results.produceType.name, produceType: results.produceType, type_items: results.items_type } );
     });
 };
 
 // Display create on GET
 exports.producetype_create_get = function (req, res, next) {
-    res.render("index", {title: "tbd"});
+    res.render("produce_type_create", {title: "create new produce type"});
 };
+
+
+
 // Handle create on POST
 exports.producetype_create_post = function (req, res, next) {
     res.render("index", {title: "tbd"});
