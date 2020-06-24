@@ -35,21 +35,27 @@ exports.item_list = function (req, res, next) {
 };
 // Display item by id on GET 
 exports.item_detail = function (req, res, next) {
+    console.log("params in item_detail: ", req.params)
     
     async.parallel({
         item: function(callback) {
+            console.log("params in async: ", req.params.id)
             Item.findById(req.params.id)
             .populate('type')
             .exec(callback);
         },
     }, function(err, results) {
-        if(err) {return next(err);}
-        if(results.item = null) {
+        console.log("results in callback: ", results)
+        if(err) {
+            return next(err);
+        }
+        console.log("results after first if: ", results)
+        if(results.item == null) {
             let err = new Error('Item not found');
             err.status = 404;
             return next(err);
         }
-        console.log(results.item)
+        console.log("results in callback after ifs: ", results)
         res.render('item_detail', {title: results.item.name, item: results.item} );
     });
 };
