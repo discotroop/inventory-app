@@ -70,7 +70,7 @@ exports.item_create_get = function (req, res, next) {
 
 // Handle item create on POST
 exports.item_create_post = [
-    // convert produce type to an array.
+    // convert item to an array.
     
     (req, res, next) => {
         if(!(req.body.producetype instanceof Array)){
@@ -182,7 +182,7 @@ exports.item_update_get = function (req, res, next) {
 
 // Handle item update on POST 
 exports.item_update_post = [
-        // convert produce type to an array.
+        // convert item to an array.
     
         (req, res, next) => {
             if(!(req.body.producetype instanceof Array)){

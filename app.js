@@ -10,6 +10,13 @@ let storeRouter = require('./routes/store');
 
 var app = express();
 
+// TBD
+// - Clean up console logs and comments
+// - Add image upload with multer
+// https://code.tutsplus.com/tutorials/file-upload-with-multer-in-node--cms-32088
+// https://alligator.io/nodejs/uploading-files-multer-express/
+// - Add admin password to block delete
+
 //Set up mongoose connection
 var mongoose = require('mongoose');
 var mongoDB = "mongodb+srv://Admin:Admin@cluster0-bkvrt.mongodb.net/produce_stand?retryWrites=true&w=majority";
