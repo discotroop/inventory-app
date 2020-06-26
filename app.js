@@ -16,6 +16,7 @@ var app = express();
 // https://code.tutsplus.com/tutorials/file-upload-with-multer-in-node--cms-32088
 // https://alligator.io/nodejs/uploading-files-multer-express/
 // - Add admin password to block delete
+// Edit CSS
 
 //Set up mongoose connection
 var mongoose = require('mongoose');

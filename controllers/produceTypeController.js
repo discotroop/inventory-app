@@ -13,7 +13,6 @@ const { sanitizeBody } = require('express-validator/filter');
 exports.producetype_list = function (req, res, next) {
     ProduceType.find({}, 'name')
     .exec(function(err, list_types) {
-        console.log(list_types)
         if(err) {return next(err);}
         res.render("produce_type_list", {title: "All Produce Types", produce_type_list: list_types});
     })
@@ -127,7 +126,6 @@ exports.producetype_delete_post = function (req, res, next) {
           if (results.producetype_items.length > 0) { 
               res.render('produce_type_delete', { produce_type: producetype, items: producetype_items} )
           } else {
-              console.log(req.body.producetypeid)
             ProduceType.findByIdAndDelete(req.body.producetypeid, function deleteProduceType(err) {
                 if (err) { return next(err); }
                 res.redirect('store/producetypes')
