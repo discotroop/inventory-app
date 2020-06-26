@@ -65,7 +65,8 @@ exports.item_create_get = function (req, res, next) {
     ProduceType.find({}, 'name')
     .exec(function (err, produce_types) {
         if (err) { return next(err); }
-        res.render("item_create", {title: "Create New Item:", types: produce_types})
+        console.log("get types: ", produce_types)
+        res.render("item_create", {title: "Create New Item:", producetypes: produce_types})
     });
 };
 
