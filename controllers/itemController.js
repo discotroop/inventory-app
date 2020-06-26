@@ -119,7 +119,19 @@ exports.item_create_post = [
 
 // Display item delete on GET
 exports.item_delete_get = function (req, res, next) {
-    res.render("item_delete", {title: "tbd"});
+    
+    async.parallel({
+        // find produce type by id
+        item: function(callback) {
+            Item.findById(req.params.id).exec(callback);
+        },
+    }, function(err, results) {
+        if(err) {return next(err); }
+        if(results.item == null) {
+            res.redirect('store/items');
+        }
+        res.render('item_delete', { title: "Delete Item", item: results.item, });
+    });
 };
 // Handle item delete on POST 
 exports.item_delete_post = function (req, res, next) {
