@@ -87,8 +87,8 @@ exports.item_create_post = [
     
     // validate fields
     body('name', 'Name must not be empty').trim().isLength({ min: 1}),
-    body('price', 'Price must be included').trim().isLength({ min: 1}),
-    body('quantity', 'Quanity must be included').trim().isLength({ min: 1}),
+    // body('price', 'Price must be included').trim().isLength({ min: 1}),
+    // body('quantity', 'Quanity must be included').trim().isLength({ min: 1}),
 
     // sanitize all fields
     sanitizeBody('*').escape(),
@@ -101,35 +101,24 @@ exports.item_create_post = [
         let item = new Item({
             name: req.body.name,
             description: req.body.description,
-            price: req.body.price,
-            quantity: req.body.quantity,
-            portion: req.body.portion,
-            type: req.body.producetype
+            price: "1.00",
+            quantity: "2",
+            portion: "sample portion",
+            type: []
+            // price: req.body.price,
+            // quantity: req.body.quantity,
+            // portion: req.body.portion,
+            // type: req.body.producetype
         });
-        console.log(item)
+        console.log("item at item create:", item.url)
 
         // check for errors
         if (!errors.isEmpty()) {
-            async.parallel({
-                producetypes: function(callback) {
-                    ProduceType.find(callback);
-                },
-            }, function(err, results) {
-                if (err) { return next(err); }
-                // mark selected produce types
-                for(let i = 0; i < results.producetypes.length; i++) {
-                    if (item.type.indexOf(results.producetypes[i]._id) > -1) {
-                        results.producetypes[i].checked='true';
-                    }
-                }
-                res.render('item_create', { title: 'Create New Item', item: item,
-                types: results.producetypes, erros: errors.array() });
-            });
-            return;
-        }
-        else {
+            console.log(errors)
+        } else {
             // It's valid, save it!
             item.save(function (err) {
+                console.log("item in save: ", item.url)
                 if(err) { return next(err); }
                 res.redirect(item.url);
             });
