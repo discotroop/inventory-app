@@ -10,10 +10,22 @@ block content
       label(for='description') Description:
       input#description.form-control(type='text' name='description' value=(undefined===item ? '' : item.description) )
     div.form-group
-      label(for="producetype") Produce Type:
-      select#producetype.form-control(type="select", placeholder="", name='producetype' required="false")  //-     for producetype in producetypes
+      // convert these inputs to numbers
+      label(for='price') Price:
+      input#price.form-control(type='text' name='price' value=(undefined===item ? '' : item.price) )
+    div.form-group
+      label(for='quantity') Quantity Available:
+      input#quantity.form-control(type='text' name='quantity' value=(undefined===item ? '' : item.quantity) )
+    div.form-group
+      label(for='portion') Portion Size:
+      input#portion.form-control(type='text' name='portion' value=(undefined===item ? '' : item.portion) )
+    div.form-group
+      label(for="producetype") Produce Type: #{item.type[0].name}
+      select#producetype.form-control(type="select", placeholder="", name='producetype' required="false")
           if item
-            option(value=item._id selected=(item.type[0].toString()==item.type._id.toString() ? 'selected' : false)) #{item.name}
+            for produce in producetypes
+             option(value=produce._id) #{produce.name}
+            //- option(value=item.name selected=(item.name)) #{item.type[0].name}
           else
             for produce in producetypes
              option(value=produce._id) #{produce.name}

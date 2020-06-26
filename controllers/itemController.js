@@ -32,7 +32,6 @@ exports.item_list = function (req, res, next) {
     Item.find({}, 'name type')
     .populate('type')
     .exec(function(err, list_items) {
-        console.log(list_items)
         if(err) {return next(err);}
         // on success render
         res.render("item_list", {title: "All Items", item_list: list_items});
@@ -65,18 +64,15 @@ exports.item_create_get = function (req, res, next) {
     ProduceType.find({}, 'name')
     .exec(function (err, produce_types) {
         if (err) { return next(err); }
-        console.log("get types: ", produce_types)
         res.render("item_create", {title: "Create New Item:", producetypes: produce_types})
     });
 };
 
-// what
 // Handle item create on POST
 exports.item_create_post = [
     // convert produce type to an array.
     
     (req, res, next) => {
-        console.log(req.body.producetype)
         if(!(req.body.producetype instanceof Array)){
             if(typeof req.body.producetype==='undefined')
             req.body.producetype=[];
@@ -88,8 +84,8 @@ exports.item_create_post = [
     
     // validate fields
     body('name', 'Name must not be empty').trim().isLength({ min: 1}),
-    // body('price', 'Price must be included').trim().isLength({ min: 1}),
-    // body('quantity', 'Quanity must be included').trim().isLength({ min: 1}),
+    body('price', 'Price must be included').trim().isLength({ min: 1}),
+    body('quantity', 'Quantity must be included').trim().isLength({ min: 1}),
 
     // sanitize all fields
     sanitizeBody('*').escape(),
@@ -102,24 +98,18 @@ exports.item_create_post = [
         let item = new Item({
             name: req.body.name,
             description: req.body.description,
-            price: "1.00",
-            quantity: "2",
-            portion: "sample portion",
-            type: []
-            // price: req.body.price,
-            // quantity: req.body.quantity,
-            // portion: req.body.portion,
-            // type: req.body.producetype
+            price: req.body.price,
+            quantity: req.body.quantity,
+            portion: req.body.portion,
+            type: req.body.producetype
         });
-        console.log("item at item create:", item.url)
 
         // check for errors
         if (!errors.isEmpty()) {
-            console.log(errors)
+            res.render("item_create", { title: "Create New Item", item: item, errors: errors})
         } else {
             // It's valid, save it!
             item.save(function (err) {
-                console.log("item in save: ", item.url)
                 if(err) { return next(err); }
                 res.redirect(item.url);
             });
@@ -138,8 +128,26 @@ exports.item_delete_post = function (req, res, next) {
 
 // Display item update on GET 
 exports.item_update_get = function (req, res, next) {
-    res.render("item_create", {title: "tbd"});
+    async.parallel({
+        item: function(callback) {
+            Item.findById(req.params.id).populate('type')
+            .exec(callback);
+        },
+        produce_types: function(callback) {
+            ProduceType.find({}, "name")
+            .exec(callback)
+        }
+    },function(err, results) {
+        if(err) {return next(err)}
+        if(results.item == null) {
+            let err = new Error("item not found")
+            err.status = 404;
+            return next(err);
+        }
+        res.render("item_create", {title: "Update Item", item: results.item, producetypes: results.produce_types})
+    });
 };
+
 // Handle item update on POST 
 exports.item_update_post = function (req, res, next) {
     res.render("item_detail", {title: "tbd"});
