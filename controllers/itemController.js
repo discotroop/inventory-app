@@ -149,6 +149,51 @@ exports.item_update_get = function (req, res, next) {
 };
 
 // Handle item update on POST 
-exports.item_update_post = function (req, res, next) {
-    res.render("item_detail", {title: "tbd"});
-};
+exports.item_update_post = [
+        // convert produce type to an array.
+    
+        (req, res, next) => {
+            if(!(req.body.producetype instanceof Array)){
+                if(typeof req.body.producetype==='undefined')
+                req.body.producetype=[];
+            } else {
+                req.body.genre=new Array(req.body.producetype);
+            }
+            next();
+        },
+        
+        // validate fields
+        body('name', 'Name must not be empty').trim().isLength({ min: 1}),
+        body('price', 'Price must be included').trim().isLength({ min: 1}),
+        body('quantity', 'Quantity must be included').trim().isLength({ min: 1}),
+    
+        // sanitize all fields
+        sanitizeBody('*').escape(),
+    
+        // process validated + sanitized request
+        (req, res, next) => {
+            // catch errors
+            const errors = validationResult(req);
+            // create new item object
+            let item = new Item({
+                name: req.body.name,
+                description: req.body.description,
+                price: req.body.price,
+                quantity: req.body.quantity,
+                portion: req.body.portion,
+                type: req.body.producetype,
+                _id: req.params.id
+            });
+    
+            // check for errors
+            if (!errors.isEmpty()) {
+                res.render("item_create", { title: "Create New Item", item: item, errors: errors})
+                return;
+            } else {
+                Item.findByIdAndUpdate(req.params.id, item, {}, function (err, theitem) {
+                    if (err) { return next(err); }
+                    res.redirect(theitem.url);
+                });
+            }
+        }
+];
