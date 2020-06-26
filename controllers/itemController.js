@@ -135,8 +135,28 @@ exports.item_delete_get = function (req, res, next) {
 };
 // Handle item delete on POST 
 exports.item_delete_post = function (req, res, next) {
-    res.render("item_delete", {title: "tbd"});
+
+    async.parallel({
+        // find item
+        item: function(callback) {
+              Item.findById(req.params.id).exec(callback)
+          },
+      }, function(err, results) {
+        // if error than return err
+          if (err) { return next(err); }
+          else {
+            // no errors so delete
+            Item.findByIdAndDelete(req.body.itemid, function deleteItem(err) {
+                if (err) { return next(err); }
+                res.redirect('../../../store/items')
+            })
+          }
+      });
+    
 };
+
+
+
 
 // Display item update on GET 
 exports.item_update_get = function (req, res, next) {
